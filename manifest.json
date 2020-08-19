@@ -1,8 +1,8 @@
 {
-  "name": "Progressive Web App",
-  "short_name": "PWA Template",
-  "description": "A simple template for PWAs.",
-  "lang": "en-US",
+  "name": "PWA - inter.skerik.me",
+  "short_name": "PWA skerik.me",
+  "description": "Jednoduchá PWA",
+  "lang": "cs-CZ",
   "start_url": ".",
   "display": "standalone",
   "theme_color": "#2e3135",
@@ -47,7 +47,7 @@
   ],
   "permissions": {
     "desktop-notification": {
-      "description": "Needed for notifying you of any changes to your account."
+      "description": "Potřebné pro zasílání změn ve vašem účtu."
     }
   }
 }
