@@ -4,11 +4,11 @@
  * https://filipskerik.eu
  */
 
-    //Database - config - PRODUKČNÍ WEB
-    define('DB_HOST', "localhost");
-    define('DB_NAME', "inter");
-    define('DB_USER', "skerikme");
-    define('DB_PASSWORD', "Skerik123");
+//Database - config - PRODUKČNÍ WEB
+define('DB_HOST', "localhost");
+define('DB_NAME', "inter");
+define('DB_USER', "skerikme");
+define('DB_PASSWORD', "Skerik123");
 
 
 //define('MAIN_MAIL','hej@filipskerik.eu');

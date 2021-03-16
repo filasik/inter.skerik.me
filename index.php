@@ -35,26 +35,55 @@ $doajob = new basic();
 
     <link rel='stylesheet' type='text/css' href='/assets/css/style.css'>
     <!--    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">-->
-    <script src="https://code.jquery.com/jquery-3.5.1.min.js"
-            integrity="sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0=" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.js" integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.bundle.min.js"></script>
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link type="text/css" rel="stylesheet" href="assets/css/materialize.min.css" media="screen,projection"/>
-    <script src="assets/js/masonry.min.js"></script>
+    <script src="https://unpkg.com/masonry-layout@4/dist/masonry.pkgd.js"></script>
+<!--    <script src="assets/js/masonry.min.js"></script>-->
     <script src="assets/js/packery.js"></script>
     <script>
         $(document).ready(function () {
-            var $grid = $('.grid').masonry({
-                itemSelector: '.grid-item',
-                percentPosition: true
+            function seradit(){
+                var $grid = $('.grid').masonry({
+                    itemSelector: '.grid-item',
+                    percentPosition: true
+                });
+                $('.grid').packery({
+                    // options
+                    itemSelector: '.grid-item',
+                    gutter: 10
+                });
+                console.log("Seřazeno.");
+            }
+            seradit();
+
+            $('.delete').click(function () {
+                // $grid.masonry();
+                var deleteid = $(this).data('id');
+                $.ajax({
+                    url: 'archive.php',
+                    type: 'POST',
+                    data: {id: deleteid},
+                    success: function (response) {
+                        // $grid.masonry();
+                        console.log(response)
+                        if (response === "1") {
+                            $(".zalozka_" + deleteid).fadeOut(300, function () {
+                                $(this).remove();
+                                console.log('Archivováno.')
+                                seradit();
+                            });
+                        } else {
+                            alert('chyba - nelze najít id');
+                        }
+                    },
+                });
             });
-            $('.grid').packery({
-                // options
-                itemSelector: '.grid-item',
-                gutter: 10
-            });
-            console.log("ready!");
+
         });
+
+
 
     </script>
     <!--    <link rel="stylesheet" href="//code.jquery.com/mobile/1.5.0-alpha.1/jquery.mobile-1.5.0-alpha.1.min.css">-->
@@ -65,32 +94,8 @@ $doajob = new basic();
 </head>
 <body>
 
-
-<!-- <nav> navbar content here  </nav>-->
-<!--    <ul id="slide-out" class="sidenav">-->
-<!--        <li>-->
-<!--            <div class="user-view">-->
-<!--                <div class="background">-->
-<!--                    <img src="images/office.jpg">-->
-<!--                </div>-->
-<!--                <a href="#user"><img class="circle" src="images/yuna.jpg"></a>-->
-<!--                <a href="#name"><span class="white-text name">Filip Skerik</span></a>-->
-<!--                <a href="#email"><span class="white-text email">filip@skerik.me</span></a>-->
-<!--            </div>-->
-<!--        </li>-->
-<!--        <li><a href="#!"><i class="material-icons">cloud</i>Archivované</a></li>-->
-<!--        <li><a href="#!">Second Link</a></li>-->
-<!--        <li>-->
-<!--            <div class="divider"></div>-->
-<!--        </li>-->
-<!--        <li><a class="subheader">Subheader</a></li>-->
-<!--        <li><a class="waves-effect" href="#!">Third Link With Waves</a></li>-->
-<!--    </ul>-->
-<!--    <a href="#" data-target="slide-out" class="sidenav-trigger" style="padding-top:10px"><i class="material-icons">menu</i></a>-->
-<!---->
-
 <div class="grid">
-    <!--    <button type="button" onclick="registerOneTimeSync()" class="btn btn-danger text-center">Synchronizace</button>-->
+<!--        <button type="button" onclick="registerOneTimeSync()" class="btn btn-danger text-center">Synchronizace</button>-->
     <?php
     foreach ($database->queryAll("select * from zalozky where archivovano=0 order by id desc") as $item) {
         if ($item['typ'] === "odkaz") {
@@ -132,13 +137,13 @@ $doajob = new basic();
         <i class="large material-icons">add</i>
     </a>
     <ul>
-        <li><a class="btn-floating red"><i class="material-icons">insert_chart</i></a></li>
-        <li><a class="btn-floating green"><i class="material-icons">publish</i></a></li>
+<!--        <li><a class="btn-floating red"><i class="material-icons">insert_chart</i></a></li>-->
+<!--        <li><a class="btn-floating green"><i class="material-icons">publish</i></a></li>-->
         <li><a class="btn-floating yellow darken-1 modal-trigger tooltipped" data-position="left"
                data-tooltip="Vložit text" href="#modalText"><i class="material-icons">format_quote</i></a>
         </li>
-        <li><a class="btn-floating blue modal-trigger tooltipped" data-position="left"
-               data-tooltip="Vložit odkaz" href="#modalOdkaz"><i class="material-icons">link</i></a>
+<!--        <li><a class="btn-floating blue modal-trigger tooltipped" data-position="left"-->
+<!--               data-tooltip="Vložit odkaz" href="#modalOdkaz"><i class="material-icons">link</i></a>-->
         </li>
     </ul>
 </div>
@@ -147,7 +152,7 @@ $doajob = new basic();
 <div id="modalText" class="modal">
     <form method="post">
         <div class="modal-content">
-            <h4>Přidat záložku</h4>
+            <h4>Přidej záložku</h4>
             <div class="input-field col s12">
                 <input id="nazev" name="nazev" type="text" class="validate" required>
                 <label for="nazev">Název záložky</label>
@@ -219,7 +224,7 @@ if (isset($_POST['addOdkaz'])) {
 ?>
 
 <div class='offline-banner'>Momentálně jste offline. Není možné provádět žádné akce na webu, prosím připojte se.</div>
-<div class="g-signin2" data-onsuccess="onSignIn"></div>
+<!--<div class="g-signin2" data-onsuccess="onSignIn"></div>-->
 <!--<a href="#" onclick="signOut();"><i class="material-icons">logout</i></a>-->
 <h1 style="font-weight: 100;color: #00000029;">skerik.me</h1>
 <script>
@@ -238,10 +243,6 @@ if (isset($_POST['addOdkaz'])) {
         console.log('Email: ' + profile.getEmail()); // This is null if the 'email' scope is not present.
     }
 
-    document.addEventListener('DOMContentLoaded', function () {
-        var elems = document.querySelectorAll('.fixed-action-btn');
-        var instances = M.FloatingActionButton.init(elems, options);
-    });
 
     // Or with jQuery
 
@@ -308,7 +309,7 @@ if (isset($_POST['addOdkaz'])) {
     /* CHANGE PAGE TITLE BASED ON PAGE VISIBILITY */
     function handleVisibilityChange() {
         if (document.visibilityState == "hidden") {
-            document.title = "Haló! Pojď zpátky!";
+            document.title = "Zápisník čeká.";
         } else {
             document.title = original_title;
         }
@@ -368,27 +369,13 @@ if (isset($_POST['addOdkaz'])) {
     }
 
     //Usage:
-    //notifyMe("Title goes here", "Body text goes here");
+    // notifyMe("Title goes here", "Body text goes here");
 </script>
 <script type="text/javascript" src="assets/js/materialize.min.js"></script>
 <script>
-    M.AutoInit();
-    document.addEventListener('DOMContentLoaded', function () {
-        var elems = document.querySelectorAll('.modal');
-        var instances = M.Modal.init(elems, options);
-    });
-
-    // Or with jQuery
-
     $(document).ready(function () {
         $('.modal').modal();
     });
-
-    document.addEventListener('DOMContentLoaded', function () {
-        var elems = document.querySelectorAll('.sidenav');
-        var instances = M.Sidenav.init(elems, options);
-    });
-
     // Initialize collapsible (uncomment the lines below if you use the dropdown variation)
     // var collapsibleElem = document.querySelector('.collapsible');
     // var collapsibleInstance = M.Collapsible.init(collapsibleElem, options);
@@ -402,25 +389,7 @@ if (isset($_POST['addOdkaz'])) {
 
 <script type="text/javascript">
     $(document).ready(function () {
-        $('.delete').click(function () {
-            var deleteid = $(this).data('id');
-            $.ajax({
-                url: 'archive.php',
-                type: 'POST',
-                data: {id: deleteid},
-                success: function (response) {
-                    console.log(response)
-                    if (response === "1") {
-                        $(".zalozka_" + deleteid).fadeOut(300, function () {
-                            $(this).remove();
-                            $grid.masonry();
-                        });
-                    } else {
-                        alert('chyba');
-                    }
-                },
-            });
-        });
+
     });
 </script>
 

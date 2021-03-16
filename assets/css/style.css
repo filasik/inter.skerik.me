@@ -47,7 +47,7 @@ body {
 
 .grid-item {
     width: 18vw;
-    margin: 5px;
+    /*margin: 5px;*/
 }
 
 /* On screens that are 992px or less, set the background color to blue */
